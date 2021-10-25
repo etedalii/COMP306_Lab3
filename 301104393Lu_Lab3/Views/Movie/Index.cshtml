@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Movie>
+
+@{
+    //Layout = null;
+}
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="row">
+    <div class="m-1">
+        <form asp-action="Index" asp-controller="Movie" method="post">
+            <span>Rating bigger than:</span>
+            <input type="number" name="rating" id="rating" max="10" maxlength="2" value="" />
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rate)
+            </th>
+            <th>Download Trailer</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td>
+                    @if (string.IsNullOrEmpty(item.FileName))
+                    {
+                        <button class="btn btn-secondary" asp-route-id="@item.MovieId" disabled>Download</button>
+                    }
+                    else
+                    {
+                        <a asp-action="DownloadFile" class="btn btn-success" asp-route-id="@item.MovieId">Download</a>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MovieId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
