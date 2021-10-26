@@ -20,7 +20,7 @@ namespace _301104393Lu_Lab3.Models
 
         public string FileName { get; set; }
 
-        public float Rate { get; set; }
+        public double Rate { get; set; }
 
         public int Year { get; set; }
     }

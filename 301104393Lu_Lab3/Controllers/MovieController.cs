@@ -19,12 +19,14 @@ namespace _301104393Lu_Lab3.Controllers
     public class MovieController : Controller
     {
         private readonly IDynamoDbContext<Movie> _context;
+        private readonly IDynamoDbContext<Comment> commentContext;
         private readonly IWebHostEnvironment env;
         IConfiguration configuration;
 
-        public MovieController(IDynamoDbContext<Movie> context, IWebHostEnvironment env, IConfiguration configuration)
+        public MovieController(IDynamoDbContext<Movie> context, IDynamoDbContext<Comment> commentContext, IWebHostEnvironment env, IConfiguration configuration)
         {
             this._context = context;
+            this.commentContext = commentContext;
             this.env = env;
             this.configuration = configuration;
         }
@@ -32,7 +34,15 @@ namespace _301104393Lu_Lab3.Controllers
         // GET: MovieController
         public async Task<ActionResult> Index()
         {
-            return View(await _context.GetAll());
+            var movie = await _context.GetAll();
+            var comment = commentContext.GetAll().Result.ToList();
+            foreach (var item in movie)
+            {
+                var spComment = comment.Where(_ => _.MovieId == item.MovieId).ToList();
+                item.Rate = spComment.Count > 0 ? spComment.Average(_ => _.Rate) : 0;
+            }
+
+            return View(movie);
         }
 
         // GET: MoviePosts/Details/5
@@ -184,9 +194,9 @@ namespace _301104393Lu_Lab3.Controllers
         {
             var movie = await _context.GetByIdAsync(id);
             await _context.DeleteAsync(movie.First());
+            await DeleteObjectNonVersionedBucketAsync(movie.First().FileName);
             return RedirectToAction(nameof(Index));
         }
-
 
         private bool UploadFile(string filePath)
         {
@@ -200,7 +210,7 @@ namespace _301104393Lu_Lab3.Controllers
                 IAmazonS3 s3Client = new AmazonS3Client(accessKeyID, secretKey, RegionEndpoint.USEast1);
 
                 var fileTransferUtility = new TransferUtility(s3Client);
-                fileTransferUtility.Upload(filePath, ConfigurationHelper.GetConfValueByKey("BucketName", "AppSettings"));
+                fileTransferUtility.Upload(filePath, configuration["BucketName"]);
                 return true;
             }
             catch (AmazonS3Exception e)
@@ -232,7 +242,7 @@ namespace _301104393Lu_Lab3.Controllers
 
                 var objectResponse = await fileTransferUtility.S3Client.GetObjectAsync(new GetObjectRequest()
                 {
-                    BucketName = ConfigurationHelper.GetConfValueByKey("BucketName", "AppSettings"),
+                    BucketName = configuration["BucketName"],
                     Key = filename
                 });
 
@@ -281,7 +291,7 @@ namespace _301104393Lu_Lab3.Controllers
 
                 var objectResponse = await fileTransferUtility.S3Client.GetObjectAsync(new GetObjectRequest()
                 {
-                    BucketName = ConfigurationHelper.GetConfValueByKey("BucketName", "AppSettings"),
+                    BucketName = configuration["BucketName"],
                     Key = filename
                 });
 
@@ -311,6 +321,32 @@ namespace _301104393Lu_Lab3.Controllers
             }
             else
                 return RedirectToAction(nameof(Index));
+        }
+
+        private async Task DeleteObjectNonVersionedBucketAsync(string keyName)
+        {
+            var accessKeyID = configuration["AccesskeyID"];
+            var secretKey = configuration["Secretaccesskey"];
+            var credentials = new BasicAWSCredentials(accessKeyID, secretKey);
+            var config = new AmazonS3Config
+            {
+                RegionEndpoint = Amazon.RegionEndpoint.USEast1
+            };
+            using var client = new AmazonS3Client(credentials, config);
+
+            try
+            {
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = configuration["BucketName"],
+                    Key = keyName
+                };
+
+                await client.DeleteObjectAsync(deleteObjectRequest);
+            }
+            catch 
+            {
+            }
         }
     }
 }

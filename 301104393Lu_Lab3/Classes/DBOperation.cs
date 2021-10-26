@@ -142,47 +142,6 @@ namespace _301104393Lu_Lab3.Classes
                 return false;
         }
 
-        public async Task InsertBookshelfItem()
-        {
-            //if (GetBookshelfItemCount().GetAwaiter().GetResult() == 0)
-            //{
-            //    foreach (var item in userBooks)
-            //    {
-            //        await _context.SaveAsync(item);
-            //    }
-            //}
-        }
-
-        public async Task<int> GetBookshelfItemCount()
-        {
-            var conditions = new List<ScanCondition>();
-            // var allDocs = await _context.ScanAsync<Bookshelf>(conditions).GetRemainingAsync();
-            // return allDocs.Count;
-            return 0;
-        }
-
-        public async Task<List<Movie>> GetBookByUserId(string username)
-        {
-            var scanConditions = new List<ScanCondition>();
-            scanConditions.Add(new ScanCondition("UserId", ScanOperator.Equal, username));
-            //var bookshelfs = null;// await _context.ScanAsync<Bookshelf>(scanConditions).GetRemainingAsync();
-
-            //var sortedList = bookshelfs.OrderByDescending(_ => Convert.ToDateTime(_.LastSeenDate)).ToList();
-            return null;
-        }
-
-        public async void UpdateBook(string isbn, int page)
-        {
-            var scanConditions = new List<ScanCondition>();
-            scanConditions.Add(new ScanCondition("ISBN", ScanOperator.Equal, isbn));
-            //var book = _context.ScanAsync<Bookshelf>(scanConditions).GetRemainingAsync().GetAwaiter().GetResult().FirstOrDefault();
-
-            //book.LastSeenPage = page;
-            //book.LastSeenDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
-
-            //_context.SaveAsync(book);
-        }
-
         #endregion
     }
 }
