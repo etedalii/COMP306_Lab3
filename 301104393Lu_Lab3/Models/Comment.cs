@@ -15,6 +15,8 @@ namespace _301104393Lu_Lab3.Models
         [DynamoDBRangeKey]
         public int Rate { get; set; }
 
+        public string CommentId { get; set; }
+
         public string Username { get; set; }
 
         public string Statement { get; set; }

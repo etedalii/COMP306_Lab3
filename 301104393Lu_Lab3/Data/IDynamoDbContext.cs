@@ -9,6 +9,8 @@ namespace _301104393Lu_Lab3.Data
     {
         Task<IEnumerable<T>> GetAll();
         Task<IEnumerable<T>> GetByIdAsync(string id);
+
+        Task<IEnumerable<T>> GetByTitleAsync(string title);
         Task<IEnumerable<T>> GetByRating(int rating);
         Task SaveAsync(T item);
         Task DeleteAsync(T item);

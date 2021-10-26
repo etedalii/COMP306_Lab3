@@ -108,7 +108,7 @@ namespace _301104393Lu_Lab3.Classes
                       new AttributeDefinition
                     {
                         AttributeName= "Rate",
-                        AttributeType= "S"
+                        AttributeType= "N"
                     }
                 },
                 KeySchema = new List<KeySchemaElement>

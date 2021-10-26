@@ -27,6 +27,14 @@ namespace _301104393Lu_Lab3.Data
             return res;
         }
 
+        public async Task<IEnumerable<T>> GetByTitleAsync(string title)
+        {
+            var scanConditions = new List<ScanCondition>();
+            scanConditions.Add(new ScanCondition("Title", ScanOperator.Equal, title));
+            var res = await base.ScanAsync<T>(scanConditions).GetRemainingAsync();
+            return res;
+        }
+
         public async Task SaveAsync(T item)
         {
             await base.SaveAsync(item);
