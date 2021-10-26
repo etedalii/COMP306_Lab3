@@ -75,5 +75,90 @@ namespace _301104393Lu_Lab3.Controllers
 
             return Json(lookup);
         }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var comment = await commentContext.GetByCommentIdAsync(id);
+            if (comment == null || comment.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            return View(comment.First());
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var comment = await commentContext.GetByCommentIdAsync(id);
+            await commentContext.DeleteAsync(comment.First());
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var comment = await commentContext.GetByCommentIdAsync(id);
+            if (comment == null || comment.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            CommentViewModel vm = new CommentViewModel();
+            vm.Movie = movieContext.GetByIdAsync(comment.First().MovieId).Result.First();
+            vm.Comment = comment.First();
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, CommentViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var oldComment = commentContext.GetByCommentIdAsync(id).Result;
+                await commentContext.DeleteAsync(oldComment.First());
+
+                await commentContext.SaveAsync(vm.Comment);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(vm.Movie);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Index(string rating, string movieName)
+        {
+            CommentViewModel vm = new CommentViewModel();
+
+            if (string.IsNullOrEmpty(rating) && string.IsNullOrEmpty(movieName))
+                return RedirectToAction(nameof(Index));
+
+            if (!string.IsNullOrEmpty(rating))
+            {
+                vm.Comments = commentContext.GetByRating(Convert.ToInt32(rating)).Result.ToList();
+            }
+            else
+                vm.Comments = commentContext.GetAll().Result.ToList();
+
+            if (!string.IsNullOrEmpty(movieName))
+            {
+                vm.Movies = movieContext.GetByTitleAsync(movieName).Result.ToList();
+            }
+            else
+                vm.Movies = movieContext.GetAll().Result.ToList();
+
+            return View(vm);
+        }
     }
 }

@@ -1,0 +1,49 @@
+﻿@model _301104393Lu_Lab3.ViewModels.CommentViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Edit</h1>
+
+<h4>Comment</h4>
+<hr />
+<span class="alert-danger">@ViewBag.MovieError</span>
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Comment.CommentId" />
+    <input type="hidden" asp-for="Comment.StatementDate" />
+    <input type="hidden" asp-for="Comment.Username" />
+    <input type="hidden" asp-for="Movie.Title" />
+    <input type="hidden" asp-for="Comment.MovieId" />
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Movie.Title" class="control-label"></label>
+                <input class="form-control" asp-for="Movie.Title" required disabled>
+                <span asp-validation-for="Movie.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment.Rate" class="control-label"></label>
+                <input asp-for="Comment.Rate" max="10" class="form-control" required />
+                <span asp-validation-for="Comment.Rate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment.Statement" class="control-label"></label>
+                <textarea asp-for="Comment.Statement" class="form-control" cols="3"></textarea>
+                <span asp-validation-for="Comment.Statement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+
+</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
