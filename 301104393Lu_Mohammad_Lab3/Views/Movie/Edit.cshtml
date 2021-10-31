@@ -1,0 +1,88 @@
+﻿@model MovieViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Movie</h4>
+<hr />
+<span class="alert-danger">@ViewBag.UploadError</span>
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Movie.MovieId" />
+    <input type="hidden" asp-for="Movie.FileName" />
+    <input type="hidden" asp-for="Movie.UserId" />
+    <div class="row">
+        <div class="col-lg-4 col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Movie.MovieTitle" class="control-label"></label>
+                <input asp-for="Movie.MovieTitle" class="form-control" />
+                <span asp-validation-for="Movie.MovieTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.Genre" class="control-label"></label>
+                <input asp-for="Movie.Genre" class="form-control" />
+                <span asp-validation-for="Movie.Genre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.Rate" class="control-label"></label>
+                <input asp-for="Movie.Rate" class="form-control" />
+                <span asp-validation-for="Movie.Rate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.Year" class="control-label"></label>
+                <input asp-for="Movie.Year" min="1900" maxlength="4" class="form-control" />
+                <span asp-validation-for="Movie.Year" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Casts" class="control-label"></label>
+                <input asp-for="Casts" class="form-control" />
+                <span asp-validation-for="Casts" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Directors" class="control-label"></label>
+                <input asp-for="Directors" class="form-control" />
+                <span asp-validation-for="Directors" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+                <a type="button" asp-action="Index" asp-controller="Movie" class="btn btn-primary"><i class="fas fa-long-arrow-alt-left"></i> Back</a>
+            </div>
+        </div>
+        <div class="col-8">
+            @if (Model.Movie.CommentDate != null && DateTime.Now.Subtract(Convert.ToDateTime(Model.Movie.CommentDate)).TotalHours >= 24)
+            {
+                <div class="form-group">
+                <label asp-for="Movie.Comment" class="control-label"></label>
+                <textarea asp-for="Movie.Comment" class="form-control" cols="3" disabled></textarea>
+                <span asp-validation-for="Movie.Comment" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Movie.Comment" class="control-label"></label>
+                    <textarea asp-for="Movie.Comment" class="form-control" cols="3"></textarea>
+                    <span asp-validation-for="Movie.Comment" class="text-danger"></span>
+                </div>
+            }
+
+            
+            <div class="form-group">
+                <div>
+                    <p>Upload one files using this form:</p>
+                    <input type="file" name="trailer" accept=".mp4" />
+                </div>
+            </div>
+        </div>
+        </div>
+
+</form>
+
+<span class="bg-warning">Please use comma between the name of Actresses or Actors </span>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

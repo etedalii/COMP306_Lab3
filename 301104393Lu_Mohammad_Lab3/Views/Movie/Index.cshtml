@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Movie>
+
+@{
+    ViewData["Title"] = "Movie";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="far fa-plus-square"></i> Create New</a>
+</p>
+<div class="row">
+    <div class="m-1">
+        <form asp-action="Index" asp-controller="Movie" method="post">
+            <span>Rating bigger than:</span>
+            <input type="number" name="rating" id="rating" max="10" maxlength="2" value="" />
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+        </form>
+
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MovieTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Director)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>Download</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MovieTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @String.Format("{0:.##}", item.Rate)
+            </td>
+            <td>
+                @( item.ToString());
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @if (string.IsNullOrEmpty(item.FileName))
+                {
+                    <button class="btn btn-secondary btn-sm" asp-route-id="@item.MovieId" disabled><i class="fas fa-download"></i></button>
+                }
+                else
+                {
+                    <a asp-action="DownloadFile" class="btn btn-success btn-sm" asp-route-id="@item.MovieId"><i class="fas fa-download"></i></a>
+                }
+            </td>
+            <td style="min-width:140px">
+                <a asp-action="Edit" asp-route-id="@item.MovieId" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                <a asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-success btn-sm"><i class="fas fa-info-circle"></i></a>
+                <a asp-action="Delete" asp-route-id="@item.MovieId" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

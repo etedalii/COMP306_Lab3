@@ -1,0 +1,48 @@
+﻿@model Movie
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Movie Details</h4>
+    <hr />
+    <dl class="row">
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Genre)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.Genre)
+        </dt>
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MovieTitle)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.MovieTitle)
+        </dt>
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rate)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.Rate)
+        </dt>
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Year)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.Year)
+        </dt>
+        <dd class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Comment)
+        </dd>
+        <dt class="col-sm-10">
+            @Html.DisplayFor(model => model.Comment)
+        </dt>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MovieId" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+    <a asp-action="Index" class="btn btn-primary"><i class="fas fa-long-arrow-alt-left"></i></a>
+</div>
