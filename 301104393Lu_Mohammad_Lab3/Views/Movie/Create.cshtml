@@ -20,7 +20,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Genre" class="control-label"></label>
-                <input asp-for="Genre" class="form-control" />
+                @Html.DropDownList("Genre",
+                    new SelectList(Enum.GetValues(typeof(Genre))),
+                    "Select Genre",
+                    new { @class = "form-control" })
                 <span asp-validation-for="Genre" class="text-danger"></span>
             </div>
             <div class="form-group">

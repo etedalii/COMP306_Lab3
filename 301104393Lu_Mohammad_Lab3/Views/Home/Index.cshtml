@@ -2,13 +2,82 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-
-    <p>
-        Users can view
-        all comments and ratings, but can only modify his/her own comments and ratings if the
-        comments and ratings are written within 24 hours.
-    </p>
-
+<div class="col-3">
+    @Html.DropDownList("Genre",
+                   new SelectList(Enum.GetValues(typeof(Genre))),
+                   "All Genre",
+                   new { @class = "form-control" })
 </div>
+<div class="col-10">
+    <table id="tblMovie" class="table table-striped table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    MovieTitle
+                </th>
+                <th>
+                    Rate
+                </th>
+                <th style="max-width:50px">
+                    View Comments
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<div class="col-10">
+    <div id="allComments">
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(() => {
+            loadMovieByGenre('');
+
+            $("#Genre").change(function () {
+                var genre = this.value;
+                loadMovieByGenre(genre);
+            });
+        });
+
+        function loadMovieByGenre(genre) {
+            $("#allComments").empty();
+            $("#tblMovie > tbody").empty();
+            var url = '@Url.Action(action:"GetMovieByGenre", controller: "Home")';
+            $.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json',
+                data: { genre },
+                success: (data) => {
+                        
+                    $.each(data, (i, item) => {
+                        $("#tblMovie tbody").append(`<tr><td>${item.movieTitle}</td><td>${item.rate}</td><td class="text-center"><button id="${item.movieTitle}" class="btn btn-sm btn-info" onClick="return ViewComment(this);"><i class="fas fa-eye"></i></button></td></tr>`);
+                    })
+                }
+            })
+        }
+
+        function ViewComment(item) {
+            $("#allComments").empty();
+            var id = $(item).attr("Id");
+            var url = '@Url.Action(action:"GetAllComments", controller: "Home")';
+            $.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json',
+                data: { title : id },
+                success: (data) => {
+                    $.each(data, (i, item) => {
+                        if (item.comment !== undefined && item.comment !== null && item.comment !== '') {
+                            $("#allComments").append(`<div class="card"><div class="card-body"><h5 class="card-title">${item.userId}</h5><h6 class="card-subtitle mb-2 text-muted">${item.commentDate}</h6>${item.comment}</div></div>`);
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+}

@@ -43,6 +43,14 @@ namespace _301104393Lu_Mohammad_Lab3.Data
             return res;
         }
 
+        public async Task<IEnumerable<T>> GetByGenreAsync(string genre)
+        {
+            var scanConditions = new List<ScanCondition>();
+            scanConditions.Add(new ScanCondition("Genre", ScanOperator.Equal, genre));
+            var res = await base.ScanAsync<T>(scanConditions).GetRemainingAsync();
+            return res;
+        }
+
         public async Task SaveAsync(T item)
         {
             await base.SaveAsync(item);
