@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "net5.0",
+    "self-contained" : false,
+    "application"    : "301104393LuMohammadLab3",
+    "environment"    : "301104393LuMohammadLab3-dev",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-09014758050dab269,sg-0a0a40b6ff0392cfc\";\"aws:ec2:vpc,Subnets\"=\"subnet-05d789e739e04c638\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.2.6 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "etedali-dev",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "keypair_moh_sec002",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}

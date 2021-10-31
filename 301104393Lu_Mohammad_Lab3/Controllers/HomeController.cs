@@ -1,13 +1,10 @@
 ﻿using _301104393Lu_Mohammad_Lab3.Data;
 using _301104393Lu_Mohammad_Lab3.Models;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Linq;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace _301104393Lu_Mohammad_Lab3.Controllers
 {
@@ -15,14 +12,10 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IDynamoDbContext<Movie> _context;
-        private readonly IWebHostEnvironment env;
-        IConfiguration configuration;
 
-        public HomeController(ILogger<HomeController> logger, IDynamoDbContext<Movie> context, IWebHostEnvironment env, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger, IDynamoDbContext<Movie> context)
         {
             this._context = context;
-            this.env = env;
-            this.configuration = configuration;
             _logger = logger;
         }
 
