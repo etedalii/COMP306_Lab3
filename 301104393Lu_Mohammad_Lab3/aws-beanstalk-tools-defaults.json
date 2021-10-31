@@ -8,7 +8,7 @@
     "environment"    : "301104393LuMohammadLab3-dev",
     "enable-xray"    : false,
     "enhanced-health-type" : "basic",
-    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-09014758050dab269,sg-0a0a40b6ff0392cfc\";\"aws:ec2:vpc,Subnets\"=\"subnet-05d789e739e04c638\"",
+    "additional-options"   : "",
     "solution-stack"       : "64bit Amazon Linux 2 v2.2.6 running .NET Core",
     "environment-type"     : "SingleInstance",
     "cname"                : "etedali-dev",

@@ -10,6 +10,9 @@
 *.userosscache
 *.sln.docstates
 
+
+*.aws-beanstalk-tools-defaults.json
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

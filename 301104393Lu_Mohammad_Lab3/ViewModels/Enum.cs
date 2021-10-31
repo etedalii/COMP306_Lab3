@@ -13,7 +13,7 @@ namespace _301104393Lu_Mohammad_Lab3
         Drama,
         Comedy,
         Short,
-        Ramance,
+        Romance,
         History
     }
 }
