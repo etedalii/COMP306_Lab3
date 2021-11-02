@@ -38,7 +38,7 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
 
         // GET: MoviePosts/Details/5
         public async Task<IActionResult> Details(string id)
-        { 
+        {
             if (id == null)
             {
                 return NotFound();
@@ -60,6 +60,8 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [DisableRequestSizeLimit]
+
         public async Task<IActionResult> Create([Bind("MovieId,MovieTitle,Genre,Rate,Year,Cast,Director,Comment")] Movie movie)
         {
             if (ModelState.IsValid)
@@ -68,23 +70,11 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
                 if (Request.Form.Files != null && Request.Form.Files.Count > 0 && !string.IsNullOrEmpty(Request.Form.Files["trailer"].FileName) && (Request.Form.Files["trailer"].ContentType == "video/mp4"))
                 {
                     filename = Request.Form.Files["trailer"].FileName;
-                    var uploadPath = Path.Combine(env.WebRootPath);
-                    if (!Directory.Exists(uploadPath))
-                        Directory.CreateDirectory(uploadPath);
-
-                    var filePath = Path.Combine(uploadPath, filename);
-                    using (var strem = System.IO.File.Create(filePath))
-                    {
-                        Request.Form.Files["trailer"].CopyTo(strem);
-                    }
-
-                    if(!UploadFile(filePath))
+                    if (!UploadFile(filename,Request.Form.Files["trailer"].OpenReadStream()))
                     {
                         ViewBag.UploadError = "Can not upload the file, please try again!";
                         return View(movie);
                     }
-
-                    System.IO.File.Delete(filePath);
                 }
                 movie.FileName = filename;
                 movie.MovieId = Guid.NewGuid().ToString();
@@ -112,7 +102,7 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
                 return NotFound();
             }
 
-            
+
             MovieViewModel vm = new MovieViewModel();
             vm.Movie = movie.First();
             vm.Casts = String.Join(",", movie.First().Cast);
@@ -126,6 +116,8 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [DisableRequestSizeLimit]
+
         public async Task<IActionResult> Edit(string id, MovieViewModel viewModel)
         {
             var oldMovie = await _context.GetByIdAsync(id);
@@ -142,31 +134,19 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
                 if (Request.Form.Files != null && Request.Form.Files.Count > 0 && !string.IsNullOrEmpty(Request.Form.Files["trailer"].FileName) && (Request.Form.Files["trailer"].ContentType == "video/mp4"))
                 {
                     filename = Request.Form.Files["trailer"].FileName;
-
-                    if (!Directory.Exists(uploadPath))
-                        Directory.CreateDirectory(uploadPath);
-
-                    var filePath = Path.Combine(uploadPath, filename);
-                    using (var strem = System.IO.File.Create(filePath))
-                    {
-                        Request.Form.Files["trailer"].CopyTo(strem);
-                    }
-
-                    if (!UploadFile(filePath))
+                    if (!UploadFile(filename, Request.Form.Files["trailer"].OpenReadStream()))
                     {
                         ViewBag.UploadError = "Can not upload the file, please try again!";
                         return View(viewModel.Movie);
                     }
-                    System.IO.File.Delete(filePath);
-
                     viewModel.Movie.FileName = filename;
                 }
 
                 if (!string.IsNullOrEmpty(viewModel.Movie.Comment) && oldMovie.First().Comment != viewModel.Movie.Comment)
                     viewModel.Movie.CommentDate = DateTime.Now.ToString();
 
-                viewModel.Movie.Cast = (viewModel.Casts.Split(',')).Select(t => t).ToList(); 
-                viewModel.Movie.Director = (viewModel.Directors.Split(',')).Select(t => t).ToList(); 
+                viewModel.Movie.Cast = (viewModel.Casts.Split(',')).Select(t => t).ToList();
+                viewModel.Movie.Director = (viewModel.Directors.Split(',')).Select(t => t).ToList();
                 await _context.SaveAsync(viewModel.Movie);
                 return RedirectToAction(nameof(Index));
             }
@@ -199,7 +179,7 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UploadFile(string filePath)
+        private bool UploadFile(string filePath, Stream stream)
         {
             try
             {
@@ -211,7 +191,7 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
                 IAmazonS3 s3Client = new AmazonS3Client(accessKeyID, secretKey, RegionEndpoint.USEast1);
 
                 var fileTransferUtility = new TransferUtility(s3Client);
-                fileTransferUtility.Upload(filePath, configuration["BucketName"]);
+                fileTransferUtility.Upload(stream, configuration["BucketName"], filePath);
                 return true;
             }
             catch (AmazonS3Exception e)
@@ -268,7 +248,7 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
         {
             if (!string.IsNullOrEmpty(rating))
             {
-                return View(await _context.GetByRating(Convert.ToDouble(rating)));
+                return View(await _context.GetByRating(Convert.ToDouble(rating), User.Identity.Name));
             }
             else
                 return RedirectToAction(nameof(Index));
@@ -295,7 +275,7 @@ namespace _301104393Lu_Mohammad_Lab3.Controllers
 
                 await client.DeleteObjectAsync(deleteObjectRequest);
             }
-            catch 
+            catch
             {
             }
         }

@@ -18,7 +18,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Movie.MovieTitle" class="control-label"></label>
-                <input asp-for="Movie.MovieTitle" class="form-control" />
+                <input asp-for="Movie.MovieTitle" class="form-control" required/>
                 <span asp-validation-for="Movie.MovieTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -31,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Movie.Rate" class="control-label"></label>
-                <input asp-for="Movie.Rate" class="form-control" />
+                <input asp-for="Movie.Rate" maxlength="2" class="form-control" />
                 <span asp-validation-for="Movie.Rate" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="col-8">
-            @if (Model.Movie.CommentDate != null && DateTime.Now.Subtract(Convert.ToDateTime(Model.Movie.CommentDate)).TotalHours >= 24)
+            @if (!string.IsNullOrEmpty(Model.Movie.Comment) && Model.Movie.CommentDate != null && DateTime.Now.Subtract(Convert.ToDateTime(Model.Movie.CommentDate)).TotalHours >= 24)
             {
                 <div class="form-group">
                 <label asp-for="Movie.Comment" class="control-label"></label>

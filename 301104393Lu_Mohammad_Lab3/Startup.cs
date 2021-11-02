@@ -3,6 +3,7 @@ using _301104393Lu_Mohammad_Lab3.Models;
 using Amazon.DynamoDBv2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,13 @@ namespace _301104393Lu_Mohammad_Lab3
             services.AddScoped<IDynamoDbContext<Movie>>(provider => new DynamoDbContext<Movie>(client, dynamoDbOptions.Movie));
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
+
+            // in order to upload big file
+            services.Configure<FormOptions>(x =>
+            {
+                x.ValueLengthLimit = int.MaxValue;
+                x.MultipartBodyLengthLimit = int.MaxValue;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

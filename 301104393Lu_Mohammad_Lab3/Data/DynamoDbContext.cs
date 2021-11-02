@@ -74,10 +74,11 @@ namespace _301104393Lu_Mohammad_Lab3.Data
             await base.SaveAsync(item);
         }
 
-        public async Task<IEnumerable<T>> GetByRating(double rating)
+        public async Task<IEnumerable<T>> GetByRating(double rating, string userId)
         {
             var scanConditions = new List<ScanCondition>();
             scanConditions.Add(new ScanCondition("Rate", ScanOperator.GreaterThanOrEqual, rating));
+            scanConditions.Add(new ScanCondition("UserId", ScanOperator.Equal, userId));
             var res = await base.ScanAsync<T>(scanConditions).GetRemainingAsync();
             return res;
         }
