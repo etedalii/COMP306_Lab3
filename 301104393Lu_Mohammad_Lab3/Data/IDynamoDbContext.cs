@@ -14,6 +14,5 @@ namespace _301104393Lu_Mohammad_Lab3.Data
         Task<IEnumerable<T>> GetByGenreAsync(string genre);
         Task SaveAsync(T item);
         Task DeleteAsync(T item);
-        Task Update(T item);
     }
 }

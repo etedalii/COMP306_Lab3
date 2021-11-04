@@ -68,12 +68,6 @@ namespace _301104393Lu_Mohammad_Lab3.Data
             return res;
         }
 
-        public async Task Update(T item)
-        {
-            base.DeleteAsync(item).GetAwaiter().GetResult();
-            await base.SaveAsync(item);
-        }
-
         public async Task<IEnumerable<T>> GetByRating(double rating, string userId)
         {
             var scanConditions = new List<ScanCondition>();
